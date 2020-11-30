@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Exemplo de Firebase</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <style>
+    .button {
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+
+    .button1 {background-color: #4CAF50;} /* Green */
+    .button2 {background-color: #008CBA;} /* Blue */
+  </style>
+</head>
+<body style="background-color:#f8f9fa">
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+    https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
+    <script>
+    let firebaseConfig = {
+      apiKey: "AIzaSyBCMK0faLXt8B8pF-pmrvyteJ05FBIbl6U",
+      authDomain: "exemplo-bd2.firebaseapp.com",
+      databaseURL: "https://exemplo-bd2.firebaseio.com",
+      projectId: "exemplo-bd2",
+      storageBucket: "exemplo-bd2.appspot.com",
+      messagingSenderId: "518051700451",
+      appId: "1:518051700451:web:a0a15616fd7257eba12fd6",
+      measurementId: "G-WL3HZTSDCQ"
+    };
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  </script>
+  <div class="jumbotron text-center">
+    <h1>Exemplo de firebase</h1>
+    <p>Crud em Banco de Dados em Árvore</p>
+    <div class="row">
+      <div class="col-md-4">
+        <h2>Form de universidade:</h2>
+        <div class='card mb-4 shadow-sm'>
+          <div class='card-body'>
+            <form>
+              <label for="nomeuniversidade">Nome da Universidade:</label><br>
+              <input type="text" id="nomeuniversidade" name="nomeuniversidade" ><br>
+              <label for="estadouniversidade">Estado onde fica a Universidade:</label><br>
+              <input type="text" id="estadouniversidade" name="estadouniversidade"><br><br>
+              <label for="linkuniversidade">Link para logo da Universidade:</label><br>
+              <input type="text" id="linkuniversidade" name="linkuniversidade"><br><br>
+              <button type="button" class="button button1" onclick="salvarUniversidade()">salvar</button>
+            </form>
+          </div>
+        </div>
+        <h2>Form do curso:</h2>
+        <div class='card mb-4 shadow-sm'>
+          <div class='card-body'>
+            <form>
+              <label for="nomecurso">Nome do Curso:</label><br>
+              <input type="text" id="nomecurso" name="nomecurso" ><br>
+              <label for="unicurso">Universidade do curso:</label><br>
+              <input type="text" id="unicurso" name="unicurso" ><br>
+              <label for="areacurso">Área do curso:</label><br>
+              <input type="text" id="areacurso" name="areacurso"><br>
+              <label for="imagemcurso">link do logo do curso:</label><br>
+              <input type="text" id="imagemcurso" name="imagemcurso"><br><br>
+              <button type="button" class="button button1" onclick="salvarCurso()">salvar</button>
+            </form>
+          </div>
+        </div>
+        <h2>Form do Aluno:</h2>
+        <div class='card mb-4 shadow-sm'>
+          <div class='card-body'>
+            <form>
+              <label for="alunocurso">Curso do Aluno:</label><br>
+              <input type="text" id="alunocurso" name="alunocurso" ><br>
+              <label for="alunouniversidade">Universidade do Aluno:</label><br>
+              <input type="text" id="alunouniversidade" name="alunouniversidade" ><br>
+              <label for="nomealuno">Nome do Aluno:</label><br>
+              <input type="text" id="nomealuno" name="nomealuno" ><br>
+              <label for="idadecurso">Idade do Aluno:</label><br>
+              <input type="text" id="idadealuno" name="idadealuno"><br><br>
+              <button type="button" class="button button1" onclick="salvarAluno()">salvar</button>
+            </form>
+          </div>
+        </div>
+        <br>
+      </div>
+      <div class="col-md-4" id="listauniversidade" onload="lerUniversidade()">
+       <h2>Lista de universidade:</h2>
+
+     </div>
+     <div class="col-md-4" id="listacursos">
+      <h2>Lista de cursos:</h2>
+      <div id = "paicursos">
+
+      </div>
+    </div>
+  </div>
+  <script>
+    function salvarUniversidade(){
+      let nomeuniversidade = document.getElementById("nomeuniversidade").value;
+      let estadouniversidade = document.getElementById("estadouniversidade").value;
+      let linkuniversidade = document.getElementById("linkuniversidade").value;
+      firebase.database().ref('universidades/' + nomeuniversidade).set({
+        nomeuniversidade: nomeuniversidade,
+        estadouniversidade: estadouniversidade,
+        linkuniversidade: linkuniversidade
+      });
+    }
+    function salvarCurso(){
+      let nomecurso = document.getElementById("nomecurso").value;
+      let areacurso = document.getElementById("areacurso").value;
+      let unicurso = document.getElementById("unicurso").value;
+      let imagemcurso = document.getElementById("imagemcurso").value;
+      firebase.database().ref('universidades/' + unicurso + '/cursos/'+ nomecurso).set({
+        nomecurso: nomecurso,
+        areacurso: areacurso,
+        imagemcurso: imagemcurso
+      });
+    }
+    function salvarAluno(){
+      let nomealuno = document.getElementById("nomealuno").value;
+      let idadealuno = document.getElementById("idadealuno").value;
+      let alunouniversidade = document.getElementById("alunouniversidade").value;
+      let alunocurso = document.getElementById("alunocurso").value;
+      firebase.database().ref('universidades/' + alunouniversidade + '/cursos/'+ alunocurso + '/alunos/' + nomealuno).set({
+        nomealuno: nomealuno,
+        idadealuno: idadealuno
+      });
+    }
+    function lerUniversidade(){
+      let db = firebase.database();
+      let ref = db.ref("universidades");
+      ref.orderByChild("nomeuniversidade").on("child_added", function(snapshot) {
+        let pai = adicionarDiv("listauniversidade", "pai"+snapshot.val().nomeuniversidade, "card mb-4 shadow-sm");
+        let id = adicionarDiv(pai, snapshot.val().nomeuniversidade, "card-body");
+        adicionarImagem(id,snapshot.val().linkuniversidade, "200px", "200px")
+        adicionarParagrafo(id,"Nome da Universidade: "+ snapshot.val().nomeuniversidade);
+        adicionarParagrafo(id,"Estado da Universidade: "+ snapshot.val().estadouniversidade);
+        let listaParametros = {universidade: snapshot.val().nomeuniversidade}
+        adicionarBotao(id, "button button1", "Mostrar cursos", listaParametros);
+      }, function (error) {
+       alert("Error: " + error.code);
+     });
+    }
+    function adicionarParagrafo(pai, texto){
+      let paragrafo = document.createElement("P");
+      paragrafo.innerHTML = texto;
+      document.getElementById(pai).appendChild(paragrafo);
+    }
+    function adicionarImagem(pai, link, altura, largura){
+      let imagem = document.createElement("img");
+      imagem.src = link;
+      imagem.style.height = altura;
+      imagem.style.width = largura;
+      document.getElementById(pai).appendChild(imagem);
+    }
+    function adicionarDiv(pai, id, classe){
+      let div = document.createElement("div");
+      div.id = id;F=
+      div.setAttribute("class", classe);
+      document.getElementById(pai).appendChild(div);
+      return id;
+    }
+    function mostrarCursos(universidade){
+      apagarvariosElementos("paicursos");
+      let db = firebase.database();
+      let ref = db.ref('universidades/' + universidade + '/cursos/');
+      ref.orderByChild("nomecurso").on("child_added", function(snapshot) {
+        let pai = adicionarDiv("paicursos", "pai"+snapshot.val().nomecurso, "card mb-4 shadow-sm");
+        let id = adicionarDiv(pai, snapshot.val().nomecurso, "card-body");
+        adicionarImagem(id,snapshot.val().imagemcurso, "200px", "200px")
+        adicionarParagrafo(id,"Nome do curso: "+ snapshot.val().nomecurso);
+        adicionarParagrafo(id,"Área do curso: "+ snapshot.val().areacurso);
+        adicionarParagrafo(id,"Local: "+ universidade);
+        let listaParametros = {universidade: universidade, curso: snapshot.val().nomecurso};
+        adicionarBotao(id,"button button1", "Mostrar alunos", listaParametros);
+      }, function (error) {
+       alert("Error: " + error.code);
+     });
+    }
+    function removerElemento(id){
+      let elemento = document.getElementById(id);
+      if(elemento != null){
+        elemento.remove();
+      }
+    }
+    function apagarvariosElementos(pai){
+      let vetor = document.getElementById(pai);
+      vetor.innerHTML = "";
+
+    }
+    function mostrarAlunos(pai, universidade, curso){
+      let db = firebase.database();
+      let ref = db.ref('universidades/' + universidade + '/cursos/' + curso + '/alunos/');
+      ref.orderByChild("nomealnuo").on("child_added", function(snapshot) {
+        adicionarParagrafo(pai,"Nome do aluno: "+ snapshot.val().nomealuno+", idade do aluno: "+ snapshot.val().idadealuno+" anos");
+      }, function (error) {
+       alert("Error: " + error.code);
+     });
+    }
+    function adicionarBotao(pai, classe, titulo, listaParametros){
+      let botao = document.createElement("button");
+      botao.setAttribute("class", classe);
+      botao.addEventListener('click', function(){
+        switch(titulo){
+          case "Mostrar alunos":
+          mostrarAlunos(pai, listaParametros["universidade"], listaParametros["curso"]);
+          break;
+          case "Mostrar cursos":
+          mostrarCursos(pai, listaParametros["universidade"]);
+          break;
+        }
+      });
+      botao.setAttribute("name", titulo);
+      botao.appendChild(document.createTextNode(titulo));
+      document.getElementById(pai).appendChild(botao);
+    }
+    window.onload = lerUniversidade;
+  </script>
+</body>
+</html>
